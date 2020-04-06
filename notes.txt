@@ -1,5 +1,5 @@
 Creating a component:
-1. Create a class. Should look like this:
+Create a class. Should look like this:
 
 class CLASS_NAME extends React.Component {
   render() {
@@ -26,3 +26,31 @@ After installing Webpack, create webpack.config.js file and define three import 
 1. Entry point
 2. Where the bundle that webpack creates is going to go 
 3. The module rules
+----------------------------------------------------
+Props are a way to pass data into components, just like parameters pass data into functions
+PROPS ARE TO COMPONENTS WHAT ARGUMENTS ARE TO FUNCTIONS
+Two aspects to props:
+1. How to pass data into components
+2. How to access props that have been passed in
+----------------------------------------------------
+To render lists with React you can use .map() but instead of returning another array, you can use JSX to return a list. So it would look like this:
+
+<ul id="tweets">
+  {tweets.map((tweet) => (
+    <li>
+      {tweet.text}
+    </li>
+  ))}
+</ul>
+
+One caveat: when you use .map to create a list, you have to add a unique key prop to each list item. This is due to the fact that it's React's to render the list as fast as possible. It helps React to know what items, if any, changed throughout different renders of that particular component. So it would look like this:
+<ul id="tweets">
+  {tweets.map((tweet) => (
+    <li key={tweet.id}>
+      {tweet.text}
+    </li>
+  ))}
+</ul>
+----------------------------------------------------
+When creating a new component, be sure to export it so that it can be fed into the main index.js file. This of course means you must import that new component into the index.js file.
+
