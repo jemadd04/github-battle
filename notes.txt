@@ -1,0 +1,28 @@
+Creating a component:
+1. Create a class. Should look like this:
+
+class CLASS_NAME extends React.Component {
+  render() {
+
+  }
+}
+
+A component can have three different aspects to it:
+1. State
+2. Lifecycle
+3. User Interface (UI)
+
+To describe #3 (UI), a component will ALWAYS have render(){} attached to it. Inside of the render body we will return the UI we want displayed. We write this with JSX and Babel will convert JSX into regular JavaScript.
+
+To get the UI displayed on the DOM, we use ReactDOM. It'll consist of two arguments:
+1. A React element - JSX creates an element (or an HTML tag) that you can use in ReactDOM 
+2. Where to render the element to - this will usually be 
+
+Import CSS to the index.js so the styles apply to the component 
+
+Since modules are being used (React, ReactDOM, etc.) we need to use Webpack to bundle them together. We also need to bring in Babel to transform JSX into JS.
+
+After installing Webpack, create webpack.config.js file and define three import settings:
+1. Entry point
+2. Where the bundle that webpack creates is going to go 
+3. The module rules
