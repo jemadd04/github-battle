@@ -53,4 +53,171 @@ One caveat: when you use .map to create a list, you have to add a unique key pro
 </ul>
 ----------------------------------------------------
 When creating a new component, be sure to export it so that it can be fed into the main index.js file. This of course means you must import that new component into the index.js file.
+----------------------------------------------------
+'this' keyword allows us to decide which objects should be focal when invoking a function or method
+4 rules of this keyword:
+1. Implicit binding
+2. Explicit binding
+3. new binding
+4. window Binding
+First thing to ask: where is this function INVOKED?
+Ex:
+var sayName = function(name) {
+  console.log('Hello, ' + name);
+}
+No way to tell what 'this' would be pointing to since there's no invoking.
 
+IMPLICIT BINDING: 'this' points to whatever is on the left of the dot at invocation
+
+EXPLICIT BINDING: 
+.call() allows you to write a method that can be used on different objects. Similar to implicit but instead of whats on the left of the dot, whats the first parameter in the parenthesis? 
+Ex:
+var sayName = function(lang1, lang2, lang3) {
+  console.log('My name is ' + this.name + ' and I know ' + lang1 + ', " + lang2 + ', and ' + lang3);
+};
+
+var stacey = {
+  name: 'Stacey',
+  age: 34
+};
+
+var languages = ['JavaScript', 'Ruby', 'Python'];
+sayName.call(stacey, languages[0], languages[1], languages[2]);
+We are invoking sayName in the context of stacey (stacey.name) and passing along three parameters
+
+.apply() does the same thing as .call() but you can pass in the name of the array instead of each individual argument and .apply() will automatically parse it out for you.
+Ex:
+var sayName = function(lang1, lang2, lang3) {
+  console.log('My name is ' + this.name + ' and I know ' + lang1 + ', " + lang2 + ', and ' + lang3);
+};
+
+var stacey = {
+  name: 'Stacey',
+  age: 34
+};
+
+var languages = ['JavaScript', 'Ruby', 'Python'];
+sayName.apply(stacey, languages);
+
+.bind() is also almost the exact same as .call() except it will return a new function that you can invoke later instead of invoking the original function 
+Ex:
+var sayName = function(lang1, lang2, lang3) {
+  console.log('My name is ' + this.name + ' and I know ' + lang1 + ', " + lang2 + ', and ' + lang3);
+};
+
+var stacey = {
+  name: 'Stacey',
+  age: 34
+};
+
+var languages = ['JavaScript', 'Ruby', 'Python'];
+var newFunction = sayName.bind(stacey, languages[0], languages[1], languages[2]); 
+newFn();
+
+NEW BINDING:
+When a function is invoked with the 'new' keyword, 'this' is bound to the new object being constructed. Behind the scenes JS creates a new object and saves it as 'this'.
+Ex:
+*Note- the function name being capitalized (Animal) indicates a constructor function and that it should be called with the 'new' keyword
+var Animal = function(color, name, type) {
+  this.color = color;
+  this.name = name;
+  this.type = type;
+};
+
+var zebra = new Animal('black and white', 'Zorro', 'Zebra')
+There when you see the word 'new', 'this' refers to Animal
+
+WINDOW BINDING 
+If you invoke a function that uses the 'this' keyword but doesn't use 'new', doesn't have anything left of the dot, or doesn't use call/apply/bind, 'this' will default to the window object. Normally it will return undefined. If you use 'strict mode', it will throw a type error.
+var sayAge = function() {
+  console.log(this.age);
+}
+
+var me = {
+  age: 25
+}
+
+sayAge(); // undefined
+window.age = 35;
+sayAge(); // 35
+----------------------------------------------------
+STATE 
+1. How do you add state to a React component?
+  - Use the constructor method (part of es6, not React)
+  - At the top of the class include the constructor and pass in props. In the constructor body there will be super(props). 
+  
+  class CLASS_NAME extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        name: 'James'
+      }
+    }
+
+
+    render() {
+
+    }
+  }
+
+  - 'Super' refers to the constructor method of the class being extended (React.Component in this case). It is used to access and call functions on an object's parent. You have to use 'super' before you can use 'this'.
+  - Finally, you add a state property on the components instance 'this'. This allows you to access that instance anywhere in the class.
+
+2. How do you update a React component's state?
+  - setState is how React allows you to update the state of the component and re-render the UI. 
+  - Two forms of setState:
+      1. Accepts object as its first argument that is merged with the current state 
+      updateName(newName) {
+        this.setState({ 
+          name: newName 
+        })
+      }
+      - When updateName is invoked, React will update name to be whatever newName is. Since the state changes, React will render and get a new UI based on the new state and update the DOM.
+      - It will look like this:
+      class Hello extends React.Component {
+        constructor(props) {
+          super(props)
+
+          this.state = {
+            name: 'James'
+          }
+
+          this.updateName = this.updateName.bind(this)
+        }
+        updateName() {
+          this.setState({
+            name: 'Shyonna'
+          })
+        }
+
+        render() {
+          return (
+            <React.Fragment>
+              <h1>Hello, {this.state.name}</h1>
+              <button onClick={this.updateName}>Change Name</button>
+            </React.Fragment>
+          )
+        }
+      }
+
+      2. Accepts a function as its first argument instead of an object. That function is passed the current state and the object that's returned will be merged into the new state.
+      addFriend(newFriend) {
+        this.setState((state) => {
+          return {
+            friends: state.friends.concat(newFriend)
+          }
+        })
+      }
+  - When do you use function setState vs object setState? Depends on what changes are being made to the state.
+  - If the current state is being updated based on the previous state, use function setState.
+  - Otherwise, use object setState
+----------------------------------------------------
+- Can you build a component just using a regular JS function? YES!
+- One caveat, however: that component needs to have only a render method. It would look like this:
+function HelloWorld (props) {
+  return (
+    <div>Hello {props.name}</div>
+  )
+}
+- This is much cleaner AND you dont have to worry about the 'this' keyword since the component passes props as the first argument.
