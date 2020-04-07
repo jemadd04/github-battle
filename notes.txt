@@ -250,3 +250,33 @@ PROPTYPES
   Hello.propTypes = {
     name: PropTypes.string.isRequired
   }
+----------------------------------------------------
+COMPONENT LIFECYCLE 
+Lifecycle is broken down into 3 parts:
+  1. When the component gets added to DOM (mounting)
+  2. When the component updates its state or receives new data via props (updating)
+  3. When the component gets removed from the DOM (unmounting)
+Mounting could consist of:
+  - Setting the components initial state
+      *Uses the constructor method 
+  - Rendering a DOM node 
+      *render() (needs to be a pure function)
+  - Making an AJAX request
+      *componentDidMount invoked only one time when the component is first mounted to the DOM. Therefore, its a good place to make an AJAX request
+  - Setting up listeners (via Websockets, Firebase, etc.)
+      *componentDidMount also 
+Updating could consist of:
+  - Re-rendering the UI with updated state or props
+      *render() or setState 
+  - Re-fetching data
+      *componentDidUpdate is invoked after the component's local state changes or after receiving new props but NOT on the initial render 
+      *Passed two arguments: the component's previous props and the component's previous state. This allows you to compare the previous state to the current state to decide if you want or need to do anything.
+  - Re-setting a listener 
+      *componentDidUpdate also 
+Unmounting could consist of:
+  - Cleanup, remove listeners, etc.
+      *componentWillUnmount
+Other lifecycle methods:
+  -getDerivedStateFromProps
+  -shouldComponentUpdate
+  -getSnapshotBeforeUpdate
