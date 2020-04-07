@@ -280,3 +280,9 @@ Other lifecycle methods:
   -getDerivedStateFromProps
   -shouldComponentUpdate
   -getSnapshotBeforeUpdate
+----------------------------------------------------
+Controlled vs Uncontrolled components
+- With React, state lives in components (controlled component). With forms, state lives in DOM (uncontrolled).
+- So where should form state live in React??
+- Controlled = "the React way"
+- Controlled is preferred over uncontrolled. The whole point of React is to give React control over your state.
