@@ -467,3 +467,13 @@ REACT CONTEXT
 - Consists of two properties:
   1. .Provider - allows us to declare the data that we want available
   2. .Consumer - allows any component in that tree that needs that data to subscribe to it 
+-----------------------------------------------------
+REACT ROUTER
+- Import BrowserRouter and rename it Router from 'react-router-dom'. Not necessary but common. 
+  - BrowserRouter allows RR to pass the app's routing information down to any child component it needs via Context.
+- Import Route from 'react-router-dom'. Wehn the app's location matches a certain path, Route will render a specified component. Otherwise,   it will render null.
+- Import Link from 'react-router-dom'. Allows the user to declaratively navigate around the app.
+- When RR renders a component, it passes that component three things:
+  1. Match 
+  2. Location 
+  3. History 
