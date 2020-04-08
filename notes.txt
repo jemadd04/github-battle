@@ -286,3 +286,174 @@ Controlled vs Uncontrolled components
 - So where should form state live in React??
 - Controlled = "the React way"
 - Controlled is preferred over uncontrolled. The whole point of React is to give React control over your state.
+----------------------------------------------------
+HIGHER ORDER COMPONENTS
+- The most popular pattern to keep your code DRY
+- Example: lets say we need to recreate the Stripe dashboard. We need to create tooltips when you hover over the SVG elements. To do this, we need three components: Info, TrendChart, and Daily Chart. Let's start with Info:
+
+  class Info extends React.Component {
+    render() {
+      return (
+        <svg
+          className="Icon-svg Icon--hoverable-svg"
+          height={this.props.height}
+          viewBox="0 0 16 16" width="16">
+            <path d="M9 8al 1 0 0 0-1-1H5.5al 1 0 1 0 0 2H7v4al 1 0 etc....>
+        </svg>
+      )
+    }
+  }
+- To add functionality to Info, we can use onMouseOver and onMouseOut events. To do this we'll add a hovering state property to our component so that we can cause a re-render when the hovering state changes, which will show the tooltip.
+  class Info extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        hovering: false
+      }
+
+      this.mouseOver = this.mouseOver.bind(this)
+      this.mouseOut = this.mouseOut.bind(this)
+    }
+    mouseOver() {
+      this.setState({hovering: false})
+    }
+    mouseOut() {
+      this.setState({hovering: false})
+    }
+    render() {
+      return (
+        <svg
+          className="Icon-svg Icon--hoverable-svg"
+          height={this.props.height}
+          viewBox="0 0 16 16" width="16">
+            <path d="M9 8al 1 0 0 0-1-1H5.5al 1 0 1 0 0 2H7v4al 1 0 etc....>
+        </svg>
+      )
+    }
+  }
+- Now we need to do the same thing to the other two components mentioned earlier: TrendChart and DailyChart. 
+  class TrendChart extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        hovering: false
+      }
+
+      this.mouseOver = this.mouseOver.bind(this)
+      this.mouseOut = this.mouseOut.bind(this)
+    }
+    mouseOver() {
+      this.setState({hovering: false})
+    }
+    mouseOut() {
+      this.setState({hovering: false})
+    }
+    render() {
+      return (
+        <>
+          {this.state.hovering === true
+            ? <Tooltip id={this.props.id} />
+            : null }
+          <Chart 
+            type='trend'
+            onMouseOver={this.mouseOver}
+            onMouseOut={this.mouseOut}
+          />
+        </>
+      )
+    }
+  }
+- We can do the exact same thing for the final component: DailyChart
+  class DailyChart extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        hovering: false
+      }
+
+      this.mouseOver = this.mouseOver.bind(this)
+      this.mouseOut = this.mouseOut.bind(this)
+    }
+    mouseOver() {
+      this.setState({hovering: false})
+    }
+    mouseOut() {
+      this.setState({hovering: false})
+    }
+    render() {
+      return (
+        <>
+          {this.state.hovering === true
+            ? <Tooltip id={this.props.id} />
+            : null }
+          <Chart 
+            type='trend'
+            onMouseOver={this.mouseOver}
+            onMouseOut={this.mouseOut}
+          />
+        </>
+      )
+    }
+  }
+- What's the PROBLEM? 
+It's pretty clear...not DRY code. A lot of repitition.
+- What's the SOLUTION?
+Higher order components.
+- HOC are similar to HOF, except instead of returning a new function that invokes the callback like the HOF does, the HOC can return a new component that renders the "callback" component.
+- Here's what it looks like:
+  function higherOrderComponent(Component) {
+    return class extends React.Component {
+      render() {
+        return <Component />
+      }
+    }
+  }
+- Using the example from above, we can create a HOC called withHOver to encapsulate all of the hover logic and pass the hovering state to the component that it renders.
+- Ultimately it will look like this. Whenever we want a component that is aware of its hovering state, we can pass the original component to our HOC:
+  const InfoWithHover = withHover(Info)
+  const TrendChartWithHover = withHover(TrendChart)
+  const DailyChartWithHover = withHover(DailyChart)
+- Then when they are rendered, they'll render the original component passing a hovering prop.
+- Finally we need to implement withHover by doing three things:
+  1.  Take in a Component argument.
+      function withHover (Component) {
+
+      }
+  2.  Return a new component.
+      function withHover (Component) {
+        return class WithHover extends React.Component {
+
+        }
+      }
+  3.  Render the Component argument passing it a "hovering" prop.
+      function withHover(Component) {
+        return class WithHover extends React.Component {
+          constructor(props) {
+            super(props)
+
+            this.state = {
+              hovering: false
+            }
+
+            this.mouseOver = this.mouseOver.bind(this)
+            this.mouseOut = this.mouseOut.bind(this)
+          }
+          mouseOver() {
+            this.setState({hovering: true})
+          }
+          mouseOut() {
+            this.setState({hovering: false})
+          }
+          render() {
+            return (
+              <div onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+                <Component hovering={this.state.hovering} />
+              </div>
+            )
+          }
+        }
+      }
+-
