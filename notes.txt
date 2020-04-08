@@ -456,4 +456,14 @@ Higher order components.
           }
         }
       }
--
+-----------------------------------------------------
+REACT CONTEXT 
+- React Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+- Using the React.createContext method accomplishes two things:
+  1. Gives you a way to declare the data that you want available throughout the component tree.
+  2. Gives a way for any component in the tree that requires taht data to be able to subscribe to it.
+- Usually you create a new Context for each unique piece of data that needs to be available and it looks like this:
+  const LocaleContext = React.createContext()
+- Consists of two properties:
+  1. .Provider - allows us to declare the data that we want available
+  2. .Consumer - allows any component in that tree that needs that data to subscribe to it 
