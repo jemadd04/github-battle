@@ -91,24 +91,17 @@ ReposGrid.propTypes = {
 };
 
 export default class Popular extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    selectedLanguage: 'All',
+    repos: {},
+    error: null,
+  };
 
-    // set the state
-    this.state = {
-      selectedLanguage: 'All',
-      repos: {},
-      error: null,
-    };
-
-    this.updateLanguage = this.updateLanguage.bind(this);
-    this.isLoading = this.isLoading.bind(this);
-  }
   // componentDidMount allows updateLanguage to run (which runs fetchPopularRepos, which is calling the API and pulling) initially when loading
   componentDidMount() {
     this.updateLanguage(this.state.selectedLanguage);
   }
-  updateLanguage(selectedLanguage) {
+  updateLanguage = (selectedLanguage) => {
     this.setState({
       selectedLanguage,
       error: null,
@@ -132,12 +125,12 @@ export default class Popular extends React.Component {
           });
         });
     }
-  }
-  isLoading() {
+  };
+  isLoading = () => {
     const { selectedLanguage, repos, error } = this.state;
 
     return !repos[selectedLanguage] && error === null;
-  }
+  };
   render() {
     const { selectedLanguage, repos, error } = this.state;
 
